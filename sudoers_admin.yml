@@ -1,0 +1,13 @@
+---
+ - name: giving permission to domain users
+   hosts: hostname
+   become: yes
+   tasks:
+     - name: Adding permissions for developer
+       lineinfile:
+         path: /home/ansible/test/
+         dest: /home/ansible/test/sudoers
+         state: present
+         #regexp: '(.*?)((\@Comment\{Annotation: key:START;\})|$)'
+         insertafter: EOF 
+         line: support ALL=(ALL)  NOPASSWD:ALL

@@ -1,0 +1,18 @@
+#usage: ansible-playbook -k sudoers.yml -e "user=username"
+#regexp: '(.*?)((\@Comment\{Annotation: key:START;\})|$)'
+
+---
+ - name: giving permission to domain users
+   hosts: hostname
+   become: yes
+   vars:
+     user: "{{ user }}"
+     
+   tasks:
+     - name: Adding permissions for developer
+       lineinfile:
+         path: /etc/
+         dest: /etc/sudoers
+         state: present
+         insertafter: EOF    
+         line: '{{ user }} ALL=NOPASSWD: /bin/chmod [0-7][0-7][0-7] /var/www/*, /bin/chown, /usr/bin/vi  /etc/apache2/*,/usr/bin/gedit /etc/apache2/*, /usr/bin/vi /etc/hosts, /usr/bin/gedit /etc/hosts, /etc/init.d/apache2, /etc/init.d/mysql, /bin/cp /etc/apache2/*, /bin/mv /etc/apache2/*,/usr/sbin/service mysql *,/usr/bin/service apache2 *,  /etc/init.d/nginx, /usr/sbin/service nginx *, /usr/sbin/service php7.0-fpm *, /etc/init.d/php7.0-fpm'

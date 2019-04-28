@@ -1,0 +1,43 @@
+
+
+---
+ - name: Setting up
+   hosts: hostname
+   become: yes
+   vars:
+     user: "{{ user }}"
+   tasks:
+     - name: Adding user
+       user:
+         name: "{{ user }}"
+         shell: /bin/bash
+
+     - name: Creating directory and setting permissions
+       file:
+         path: /home/{{ user }}/.ssh/
+         owner: '{{ user }}'
+         group: '{{ user }}'
+         mode: 0700
+         state: directory
+     
+     - name: Set authorized key in alternate location
+       copy:
+         src: /home/ansible/playbook_server_SOE/{{ user }}
+         dest: /home/{{ user }}/.ssh/authorized_keys
+         mode: 0700
+         owner: '{{ user }}'
+         group: '{{ user }}'
+ 
+     - name: setting permission for key
+       file:
+         path: /home/{{ user }}/.ssh/authorized_keys
+         mode: 0640
+
+     - name: Adding permissions in sudoers
+       lineinfile:
+         path: /etc/
+         dest: /etc/sudoers
+         state: present
+         insertafter: EOF
+         line: '{{ user }} ALL=(ALL) NOPASSWD:ALL'
+

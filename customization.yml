@@ -1,0 +1,24 @@
+---
+ - name: General customizations
+   hosts: hostname
+   become: yes
+   tasks:
+
+     - name: adding alias for ls -al
+       shell: printf "alias l='ls -a'\nalias ll='ls -l'\nalias la='ls -la'">> /etc/bash.bashrc 
+
+     - name: Blacklisting USB access
+       lineinfile:
+         path: /etc/modprobe.d/
+         dest: /etc/modprobe.d/blacklist.conf
+         state: present
+         insertafter: EOF
+         line: 'blacklist usb_storage'
+
+     - name: Grub recovery changing
+       lineinfile:
+         path: /etc/default/
+         dest: /etc/default/grub
+         state: present
+         insertafter: EOF
+         line: 'GRUB_DISABLE_RECOVERY="true"'

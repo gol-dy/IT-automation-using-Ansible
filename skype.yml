@@ -1,0 +1,23 @@
+---
+
+ - name: Skype installation
+   hosts: hostname
+   become: yes
+   tasks:
+     - name: adding apt- key
+       shell: curl https://repo.skype.com/data/SKYPE-GPG-KEY | sudo apt-key add -
+      
+     - name: adding skype's repo
+       shell: echo "deb https://repo.skype.com/deb stable main" | sudo tee /etc/apt/sources.list.d/skypeforlinux.list
+       
+     - name: Run the equivalent of "apt-get update" as a separate step
+       apt:
+         update_cache: yes
+
+     - name: installation of skype     
+       apt: name=skypeforlinux
+
+
+
+#- apt_key:
+#    url:  https://repo.skype.com/data/SKYPE-GPG-KEY

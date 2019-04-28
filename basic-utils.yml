@@ -1,0 +1,63 @@
+---
+
+ - name: Installing a list of packages
+   hosts: hostname
+   become: True
+   tasks:
+     - name: Updating the repository
+       apt:
+         update_cache: yes  
+       when: ansible_os_family == "Debian"
+
+
+     - name: Installing packages needed for SOE
+       apt:
+         name: "{{ packages }}"         
+       vars:
+         packages:
+           - git
+           - build-essential
+           - net-tools
+           - vim
+           - nginx
+           - mysql-server
+           - mysql-client
+           - mysql-common
+           - mysql-workbench
+           - meld
+           - putty
+           - filezilla
+           - git-all
+           - clamav 
+           - mailutils
+           - apt-transport-https
+       when: ansible_os_family == "Debian"
+
+
+     - name: Updating the repository
+       command: yum update -y
+       args:
+         warn: no
+       when: ansible_os_family == "RedHat"
+
+     - name: Installing packages needed for SOE
+       yum:
+         name: "{{ packages }}"
+       vars:
+         packages:
+           - git
+           - net-tools
+           - vim
+           - nginx
+           #- mysql-server
+           #- mysql-client
+           #- mysql-common
+           #- mysql-workbench
+           - meld
+           - putty
+           - filezilla
+           - git-all
+           - clamav
+           #- mailutils
+           #- apt-transport-https
+       when: ansible_os_family == "RedHat" 
